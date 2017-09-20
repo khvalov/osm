@@ -159,7 +159,6 @@ class OverpassConnection implements ConnectionInterface
      */
     public function runQuery($query) {
         return $this->run($query, function ($me, $query) {
-
             return $this->getClient()->post(null, ['form_params' => ['data' => $query]]);
         });
     }

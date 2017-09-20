@@ -263,9 +263,12 @@ class OverpassBuilder
             foreach ($tag as $key => $value) {
                 $this->whereTag($key, '=', $value, $element);
             }
-        }/* else if ($tag instanceof TagExpression) {
-            @todo add TagExpression to support queries like: Key/value matches regular expression (~"key regex"~"value regex")
-        }*/
+        }else if ($tag instanceof \KageNoNeko\OSM\TagExpression) {
+            $this->wheres[$element]['Tag'][] = compact('tag', 'operator', 'value');
+            return $this;
+
+            //@todo add TagExpression to support queries like: Key/value matches regular expression (~"key regex"~"value regex")
+        }
 
         if (func_num_args() == 2) {
             list($value, $operator) = [$operator, '='];
@@ -286,7 +289,7 @@ class OverpassBuilder
         $type = 'Tag';
 
         $this->wheres[$element][$type][] = compact('tag', 'operator', 'value');
-
+        
         return $this;
     }
 

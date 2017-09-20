@@ -38,12 +38,16 @@ class OverpassGrammar
     protected function compileWhereTag(array $where) {
         $ql = [];
         foreach ($where as $whereTag) {
-            $tag = addslashes($whereTag['tag']);
-            $value = addslashes($whereTag['value']);
-            if ($whereTag['operator'] == "exists") {
-                $ql[] = "[\"{$tag}\"]";
+            if($whereTag['tag'] instanceof \KageNoNeko\OSM\TagExpression){
+                $ql[] = $whereTag['tag']->getExpression();
             } else {
-                $ql[] = "[\"{$tag}\"{$whereTag['operator']}\"{$value}\"]";
+                $tag = addslashes($whereTag['tag']);
+                $value = addslashes($whereTag['value']);
+                if ($whereTag['operator'] == "exists") {
+                    $ql[] = "[\"{$tag}\"]";
+                } else {
+                    $ql[] = "[\"{$tag}\"{$whereTag['operator']}\"{$value}\"]";
+                }
             }
         }
 
@@ -102,7 +106,6 @@ class OverpassGrammar
     }
 
     public function compileQuery(QueryBuilder $query) {
-
         $ql = trim($this->concatenate($this->compileComponents($query)));
 
         return $ql;
