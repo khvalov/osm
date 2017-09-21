@@ -81,7 +81,7 @@ class OverpassBuilder
      * @var array
      */
     protected $verbosity = [
-        'ids', 'skel', 'body', 'tags', 'meta',
+        'ids', 'skel', 'body', 'tags', 'meta','geom'
     ];
 
     /**
