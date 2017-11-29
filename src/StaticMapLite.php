@@ -4,18 +4,18 @@ namespace KageNoNeko\OSM;
 Class StaticMapLite
 {
 
-    protected $maxWidth = 1024;
-    protected $maxHeight = 1024;
+    public $maxWidth = 1024;
+    public $maxHeight = 1024;
 
-    protected $tileSize = 256;
+    public $tileSize = 256;
     protected $tileSrcUrl = array('mapnik' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',
         'osmarenderer' => 'http://otile1.mqcdn.com/tiles/1.0.0/osm/{Z}/{X}/{Y}.png',
         'cycle' => 'http://a.tile.opencyclemap.org/cycle/{Z}/{X}/{Y}.png',
     );
 
-    protected $tileDefaultSrc = 'mapnik';
-    protected $markerBaseDir = 'images/markers';
-    protected $osmLogo = 'images/osm_logo.png';
+    public $tileDefaultSrc = 'mapnik';
+    public $markerBaseDir = 'images/markers';
+    public $osmLogo = 'images/osm_logo.png';
 
     protected $markerPrototypes = array(
         // found at http://www.mapito.net/map-marker-icons.html
@@ -58,8 +58,8 @@ Class StaticMapLite
     protected $mapCacheFile = '';
     protected $mapCacheExtension = 'png';
 
-    protected $zoom, $lat, $lon, $width, $height, $markers, $image, $maptype;
-    protected $centerX, $centerY, $offsetX, $offsetY;
+    public $zoom, $lat, $lon, $width, $height, $markers, $image, $maptype;
+    public $centerX, $centerY, $offsetX, $offsetY;
 
     public function __construct()
     {
@@ -374,6 +374,10 @@ Class StaticMapLite
             return imagepng($this->image);
 
         }
+    }
+
+    public function getMapFile(){
+        return $this->mapCacheIDToFilename();
     }
 
 }
