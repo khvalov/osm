@@ -14,8 +14,8 @@ Class StaticMapLite
     );
 
     public $tileDefaultSrc = 'mapnik';
-    public $markerBaseDir = 'images/markers';
-    public $osmLogo = 'images/osm_logo.png';
+    public $markerBaseDir = __DIR__.'/../images/markers';
+    public $osmLogo = __DIR__.'/../images/osm_logo.png';
 
     protected $markerPrototypes = array(
         // found at http://www.mapito.net/map-marker-icons.html
@@ -50,10 +50,10 @@ Class StaticMapLite
 
 
     protected $useTileCache = true;
-    protected $tileCacheBaseDir = '../cache/tiles';
+    public $tileCacheBaseDir = '../cache/tiles';
 
     protected $useMapCache = true;
-    protected $mapCacheBaseDir = '../cache/maps';
+    public $mapCacheBaseDir = '../cache/maps';
     protected $mapCacheID = '';
     protected $mapCacheFile = '';
     protected $mapCacheExtension = 'png';
@@ -193,6 +193,7 @@ Class StaticMapLite
 
     public function placeMarkers()
     {
+        $markerIndex=0;
         // loop thru marker array
         foreach ($this->markers as $marker) {
             // set some local variables
@@ -345,6 +346,13 @@ Class StaticMapLite
         if ($this->osmLogo) $this->copyrightNotice();
     }
 
+    public function createMap(){
+        $this->checkMapCache();
+        $this->makeMap();
+        $this->mkdir_recursive(dirname($this->mapCacheIDToFilename()), 0777);
+        imagepng($this->image, $this->mapCacheIDToFilename(), 9);
+    }
+
     public function showMap()
     {
         $this->parseParams();
@@ -352,9 +360,7 @@ Class StaticMapLite
             // use map cache, so check cache for map
             if (!$this->checkMapCache()) {
                 // map is not in cache, needs to be build
-                $this->makeMap();
-                $this->mkdir_recursive(dirname($this->mapCacheIDToFilename()), 0777);
-                imagepng($this->image, $this->mapCacheIDToFilename(), 9);
+                $this->createMap();
                 $this->sendHeader();
                 if (file_exists($this->mapCacheIDToFilename())) {
                     return file_get_contents($this->mapCacheIDToFilename());
